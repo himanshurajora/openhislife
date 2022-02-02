@@ -1,7 +1,28 @@
 import { Button, Center, Grid, Text, Container } from "@mantine/core";
+import {useAuthState} from 'react-firebase-hooks/auth'
+import firebaseApp from '../lib/firebase'
+import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
+import toast, {Toaster} from 'react-hot-toast'
 
-export default function Login() {
+export default function Login(){
 
+    const handleLogin = async () => {
+       try{
+        var provider = new GoogleAuthProvider()
+        const result = await signInWithPopup(getAuth(firebaseApp), provider)
+        if(result.user){
+            toast.success("Logged In Successfully!!", {
+                icon: "👀"
+            })
+        }else{
+            toast.error("Login Failed", {
+                "icon": "👹"
+            })
+        } 
+       }catch(err){
+        toast.error("Login Failed")
+       }
+    }   
     return (
         <>
             <Container>
@@ -13,7 +34,7 @@ export default function Login() {
                             </Text>
                         </Center>
                         <Center my={"30px"}>
-                            <Button color="yellow" radius="lg" size="lg">
+                            <Button color="yellow" radius="lg" size="lg" onClick={handleLogin}>
                                 Login With Google
                             </Button>
                         </Center>
@@ -33,6 +54,7 @@ export default function Login() {
 
                 </footer>
             </Container>
+            <Toaster></Toaster>
         </>
 
     )
