@@ -1,10 +1,27 @@
-import { Button, Center, Grid, Text, Container } from "@mantine/core";
+import { Button, Center, Grid, Text, Container, LoadingOverlay } from "@mantine/core";
 import {useAuthState} from 'react-firebase-hooks/auth'
 import firebaseApp from '../lib/firebase'
 import {getAuth, GoogleAuthProvider, signInWithPopup} from 'firebase/auth'
 import toast, {Toaster} from 'react-hot-toast'
+import {useNavigate} from 'react-router-dom'
+import { useEffect } from "react";
 
 export default function Login(){
+    const router = useNavigate()
+    const [user, loading, error] = useAuthState(getAuth(firebaseApp))
+
+    // useEffect for authState
+    useEffect(()=>{
+        if(user){
+            router("/")
+        }else{
+            if(!loading){
+                toast('I Think You Need To Login First', {
+                    icon: "🤔"
+                })
+            }
+        }
+    }, [user])
 
     const handleLogin = async () => {
        try{
@@ -14,6 +31,7 @@ export default function Login(){
             toast.success("Logged In Successfully!!", {
                 icon: "👀"
             })
+            router('/')
         }else{
             toast.error("Login Failed", {
                 "icon": "👹"
@@ -25,6 +43,7 @@ export default function Login(){
     }   
     return (
         <>
+            <LoadingOverlay visible={loading}/>
             <Container>
                 <Center my={"30px"} style={{ height: "70vh" }}>
                     <div>
