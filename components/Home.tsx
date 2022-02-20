@@ -4,6 +4,7 @@ import firebaseApp from '../lib/firebase'
 import { getAuth, signOut } from "firebase/auth"
 import { useEffect } from "react"
 import { useNavigate, } from "react-router-dom"
+import Navbar from './Navbar'
 import toast, { Toaster } from 'react-hot-toast'
 export default function Home() {
     const appAuth = getAuth(firebaseApp)
@@ -20,6 +21,9 @@ export default function Home() {
     }
 
     return (<>
+        <div className="container-center">
+            <Navbar />
+        </div>
         <Center>
             {
                 loading ?
@@ -28,13 +32,8 @@ export default function Home() {
             }
         </Center>
         <Center>
-            {
-                user ?
-                    <Button onClick={handleLogOut} color="yellow">Logout</Button>
-                    : <></>}
+            
         </Center>
-
-
         <Toaster />
     </>)
 }
